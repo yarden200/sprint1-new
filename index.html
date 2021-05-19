@@ -12,8 +12,27 @@
 <body onload="initGame()">
     <h1>Mine-Sweeper</h1>
     <table>
+        <thead>
+            <button onclick="initGame()">😃</button>
+        </thead>
         <tbody class="board"></tbody>
     </table>
+
+    <button onclick="openModalLeves()">change level</button>
+
+    <div class="moadl-levels">
+        <div class="modal-levels-content">
+            <span class="close-modal-levels" onclick="closeModalLevels()">&times;</span>
+            <button onclick="setLevel('beginner')">Beginner</button>
+            <button onclick="setLevel('medium')">Medium</button> 
+            <button onclick="setLevel('expert')">Expert</button>
+        </div>
+    </div>
+
+
+
+
+
     <script src="js/main.js"></script>
     <script src="js/util.js"></script>
 </body>
