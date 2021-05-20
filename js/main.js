@@ -16,6 +16,8 @@ var gLevel = {
     mines: 2
 };
 
+var gIsFirstClick=true;
+var gSecsPassedInterval;
 
 
 function initGame() {
@@ -43,18 +45,19 @@ function buildBoard(size) {
     return board;
 }
 
+
 function placeMineInRanLoc() {
     for (var i = 0; i < gLevel.mines; i++) {
         var loc = getMineRanLocation();
         // console.log(loc);
         gBoard[loc.i][loc.j].isMine = true;
-        console.log('heyy:',i);
+        console.log('heyy:', i);
     }
 }
 
 function getMineRanLocation() {
     var loc = { i: getRandomInt(0, gLevel.size - 1), j: getRandomInt(0, gLevel.size - 1) };
-    while (gBoard[loc.i], [loc.j].isMine) loc = { i: getRandomInt(0, gLevel.size - 1), j: getRandomInt(0, gLevel.size - 1) };
+    while (gBoard[loc.i][loc.j].isMine) loc = { i: getRandomInt(0, gLevel.size - 1), j: getRandomInt(0, gLevel.size - 1) };
     return loc;
 }
 
@@ -92,7 +95,7 @@ function renderBoard(board) {
             strHTML += `\t</td>\n`;
         }
         strHTML += `</tr>\n`;
-    }    
+    }
     var elBoard = document.querySelector('.board');
     elBoard.innerHTML = strHTML;
     // console.table(board);
@@ -104,6 +107,10 @@ function cellClicked(i, j, elCell) {
     if (cell.isMarked) return;
 
     if (!(cell.isMine)) {
+        if (gIsFirstClick) {
+            secsPassedCount();
+            gIsFirstClick=false;
+        }
         if (cell.minesAroundCount === 0) {
             expandShown(elCell, i, j);
         } else {
@@ -124,11 +131,16 @@ function cellMarked(ev, elCell, i, j) {
 
     var cell = gBoard[i][j];
     if (cell.isShown) return;
+    
     if (cell.isMarked) {
         elCell.innerHTML = '';
         cell.isMarked = false;
         gGame.markedCount--;
     } else {
+        if (gIsFirstClick) {
+            secsPassedCount();
+            gIsFirstClick=false;
+        }
         elCell.innerHTML = FLAG;
         cell.isMarked = true;
         gGame.markedCount++;
@@ -141,48 +153,25 @@ function checkGameOver() {
 }
 
 function expandShown(elCell, i, j) {
-    // if (i < 0 || i >= gBoard.length || j < 0 || j >= gBoard[0].length || gBoard[i][j].minesAroundCount !== 0) return;
-
-    // elCell.innerHTML = '';
-    // for (var idxI = i - 1; idxI <= i + 1; idxI++) {
-    //     if (idxI < 0 || idxI >= gBoard.length) continue;
-    //     for (var idxJ = j - 1; idxJ <= j + 1; idxJ++) {
-    //         if (idxJ < 0 || idxJ >= gBoard[idxI].length) continue;
-    //         // console.log(getSelector(idxI,idxJ));
-    //         var elNegCell = document.querySelector(getSelector(idxI, idxJ));
-    //         elNegCell.classList.add('clicked-cell');
-    //         elNegCell.innerHTML = gBoard[idxI][idxJ].minesAroundCount;
-    //         if (gBoard[idxI][idxJ].minesAroundCount === 0 && i !== idxI || j !== idxJ) {
-    //             var elRecCel = document.querySelector(getSelector(idxI, idxJ));
-    //             expandShown(elRecCel, idxI, idxJ);
-    //         }
-    //         gBoard[idxI][idxJ].isShown = true;
-    //         gGame.shownCount++;
-    //     }
-    // }
-
-
     elCell.innerHTML = '';
-
-        for (var idxI = i - 1; idxI <= i + 1; idxI++) {
-            if (idxI < 0 || idxI >= gBoard.length) continue;
-            for (var idxJ = j - 1; idxJ <= j + 1; idxJ++) {
-                // if (idxI === i && idxJ === j) continue;
-                if (idxJ < 0 || idxJ >= gBoard[idxI].length) continue;
-                // console.log(getSelector(idxI,idxJ));
-                var elNegCell = document.querySelector(getSelector(idxI, idxJ));
-                elNegCell.classList.add('clicked-cell');
-                elNegCell.innerHTML = gBoard[idxI][idxJ].minesAroundCount;
-                gBoard[idxI][idxJ].isShown = true;
-                gGame.shownCount++;
-            }
+    for (var idxI = i - 1; idxI <= i + 1; idxI++) {
+        if (idxI < 0 || idxI >= gBoard.length) continue;
+        for (var idxJ = j - 1; idxJ <= j + 1; idxJ++) {
+            // if (idxI === i && idxJ === j) continue;
+            if (idxJ < 0 || idxJ >= gBoard[idxI].length) continue;
+            // console.log(getSelector(idxI,idxJ));
+            var elNegCell = document.querySelector(getSelector(idxI, idxJ));
+            elNegCell.classList.add('clicked-cell');
+            elNegCell.innerHTML = gBoard[idxI][idxJ].minesAroundCount;
+            gBoard[idxI][idxJ].isShown = true;
+            gGame.shownCount++;
         }
-
-
+    }
 }
 
 function setLevel(strLevel) {
     console.log(strLevel);
+
     switch (strLevel) {
         case 'beginner':
             gLevel.size = 4;
@@ -208,6 +197,17 @@ function setLevel(strLevel) {
     }
 }
 
+function secsPassedCount(){
+    gSecsPassedInterval=setInterval(function(){
+        gGame.secsPassed++;
+        var elTime=document.querySelector('.time');
+        elTime.innerText=''+gGame.secsPassed;
+    },1000)
+}
+
+function gameOver() {
+    
+}
 
 
 
@@ -217,19 +217,4 @@ function setLevel(strLevel) {
 
 
 
-// elCell.innerHTML = '';
-
-//     for (var idxI = i - 1; idxI <= i + 1; idxI++) {
-//         if (idxI < 0 || idxI >= gBoard.length) continue;
-//         for (var idxJ = j - 1; idxJ <= j + 1; idxJ++) {
-//             // if (idxI === i && idxJ === j) continue;
-//             if (idxJ < 0 || idxJ >= gBoard[idxI].length) continue;
-//             // console.log(getSelector(idxI,idxJ));
-//             var elNegCell = document.querySelector(getSelector(idxI, idxJ));
-//             elNegCell.classList.add('clicked-cell');
-//             elNegCell.innerHTML = gBoard[idxI][idxJ].minesAroundCount;
-//             gBoard[idxI][idxJ].isShown = true;
-//             gGame.shownCount++;
-//         }
-//     }
 

@@ -41,6 +41,17 @@
      font-weight: bold;
 }
 
+
+
+.time {
+background-color: rgba(136, 136, 136, 0.822);
+color: red;
+width: 40px;
+margin-left: 80px;
+padding: 4px;
+}
+
+
 /* .close-modal-levels :hover,
 .close-modal-levels:focus {
      color: #000;
