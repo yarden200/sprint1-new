@@ -11,29 +11,29 @@
 
 <body onload="initGame()">
     <h1>Mine-Sweeper</h1>
-    <table>
-        <thead>
-            <button onclick="initGame()">😃</button> <span class="time">0</span>
-        </thead>
+    <div class="top-board"> <span class="time">time:0</span> <button class="smiely" onclick="initGame()">😃</button>
+        <span class="life">life:3</span>
+    </div>
+    <table border="1">
         <tbody class="board"></tbody>
     </table>
 
-    <button onclick="openModalLeves()">change level</button>
+    <button  class="btn-change-level" onclick="openModalLeves()">change level</button>
 
     <div class="moadl-levels">
         <div class="modal-levels-content">
             <span class="close-modal-levels" onclick="closeModalLevels()">&times;</span>
-            <button onclick="setLevel('beginner')">Beginner</button>
-            <button onclick="setLevel('medium')">Medium</button> 
-            <button onclick="setLevel('expert')">Expert</button>
+            <button class="btn-level" onclick="setLevel('beginner')">Beginner</button>
+            <button class="btn-level" onclick="setLevel('medium')">Medium</button>
+            <button class="btn-level" onclick="setLevel('expert')">Expert</button>
         </div>
     </div>
-
-
-
-
-
+    <div class="footer">
+        <p>Yarden Shaham</p>
+      </div>
     <script src="js/main.js"></script>
+    <script src="js/cell-function.js"></script>
+    <script src="js/board-function.js"></script>
     <script src="js/util.js"></script>
 </body>
 
